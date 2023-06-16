@@ -37,18 +37,23 @@ GET https://calm-red-dove-fez.cyclic.app/users
 **Response:**
 
 ```
-[
-  {
-    "id": ""user-FIbMSWcFKPR4fAAk"",
-    "username": "admin",
-    "fullname": "Administrator"
-  },
-  {
-    "id": ""user-FPqYfyWnkP8sSpKs"",
-    "username": "jane_smith",
-    "fullname": "Jane Smith"
-  }
-]
+{
+    "status": "success",
+    "data": {
+        "users": [
+            {
+                "id": "user-FIbMSWcFKPR4fAAk",
+                "username": "angkrnia",
+                "fullname": "angkrnia"
+            },
+            {
+                "id": "user-FPqYfyWnkP8sSpKs",
+                "username": "admin",
+                "fullname": "admin123"
+            }
+        ]
+    }
+}
 ```
 
 ### Mendaftarkan Pengguna Baru
@@ -70,9 +75,11 @@ Payload:
 
 ```
 {
-  "id": "user-FPqYfyWnkP8sSpKs",
-  "username": "james_brown",
-  "fullname": "James Brown"
+   "status": "success",
+   "message": "User berhasil ditambahkan",
+   "data": {
+     "userId": "user-FPqYfyWnkP8sSpKs"
+   }
 }
 ```
 

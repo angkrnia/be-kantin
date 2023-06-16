@@ -3,15 +3,13 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 
 // api
-const rooms = require('./api/rooms');
 const users = require('./api/users');
 
 // services
-const RoomsService = require('./service/postgres/RoomsServices');
 const UsersService = require('./service/postgres/UsersService');
 
 // validator
-const RoomsValidator = require('./validator/rooms');
+const authValidator = require('./validator/auth');
 
 (async () => {
   const server = Hapi.server({
@@ -25,13 +23,6 @@ const RoomsValidator = require('./validator/rooms');
   });
 
   await server.register([
-    // {
-    //   plugin: rooms,
-    //   options: {
-    //     service: new RoomsService(),
-    //     validator: RoomsValidator,
-    //   },
-    // },
     {
       plugin: users,
       options: {
@@ -41,5 +32,6 @@ const RoomsValidator = require('./validator/rooms');
   ]);
 
   await server.start();
+
   console.log(`server start at ${server.info.uri}`);
 })();

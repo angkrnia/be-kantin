@@ -1,7 +1,7 @@
-const { Pool } = require("pg");
-const { nanoid } = require("nanoid");
-const InvarianError = require("../../error/InvarianError");
-const NotFoundError = require("../../error/NotFoundError");
+const { Pool } = require('pg');
+const { nanoid } = require('nanoid');
+const InvarianError = require('../../error/InvarianError');
+const NotFoundError = require('../../error/NotFoundError');
 
 class CategoriesServices {
   constructor() {
@@ -10,7 +10,7 @@ class CategoriesServices {
 
   async getCategories() {
     const query = {
-      text: "SELECT * FROM categories",
+      text: 'SELECT * FROM categories',
     };
 
     const { rows } = await this._pool.query(query);
@@ -23,14 +23,14 @@ class CategoriesServices {
     const createdAt = new Date().toISOString();
 
     const query = {
-      text: "INSERT INTO categories VALUES($1, $2, $3) RETURNING id",
+      text: 'INSERT INTO categories VALUES($1, $2, $3) RETURNING id',
       values: [id, name, createdAt],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new InvarianError("Room gagal ditambahkan");
+      throw new InvarianError('Room gagal ditambahkan');
     }
 
     return rows[0].id;

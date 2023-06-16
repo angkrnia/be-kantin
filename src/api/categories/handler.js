@@ -8,14 +8,14 @@ class CategoriesHandler {
       const categories = await this._service.getCategories();
 
       return {
-        status: "success",
+        status: 'success',
         data: {
           categories,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(500);
@@ -30,8 +30,8 @@ class CategoriesHandler {
       const categoryId = await this._service.addCategory({ name });
 
       const response = h.response({
-        status: "success",
-        message: "Category berhasil ditambahkan",
+        status: 'success',
+        message: 'Category berhasil ditambahkan',
         data: {
           categoryId,
         },
@@ -40,7 +40,7 @@ class CategoriesHandler {
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(500);

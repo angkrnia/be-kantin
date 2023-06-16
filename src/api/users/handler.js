@@ -8,14 +8,14 @@ class UsersHandler {
       const users = await this._service.getUsers();
 
       return {
-        status: "success",
+        status: 'success',
         data: {
           users,
         },
       };
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(500);
@@ -34,8 +34,8 @@ class UsersHandler {
       });
 
       const response = h.response({
-        status: "success",
-        message: "User berhasil ditambahkan",
+        status: 'success',
+        message: 'User berhasil ditambahkan',
         data: {
           userId,
         },
@@ -44,7 +44,7 @@ class UsersHandler {
       return response;
     } catch (error) {
       const response = h.response({
-        status: "fail",
+        status: 'fail',
         message: error.message,
       });
       response.code(500);

@@ -17,6 +17,7 @@
         "linebreak-style":"off",
         "class-methods-use-this":"off",
         "camelcase":"off",
-        "quotes":"off"
+        "quotes":"off",
+        "max-len":"off"
     }
 }

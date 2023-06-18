@@ -9,75 +9,90 @@ class OrdersServices {
 
   async getOrders() {
     const query = {
-      text: 'SELECT * FROM order_menu ORDER BY id ASC',
+      text: 'SELECT * FROM orders ORDER BY id ASC',
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new NotFoundError('Menu tidak ditemukan');
+      throw new NotFoundError('Order tidak ditemukan');
     }
 
     return rows;
   }
 
-  async getOrderById(id) {
+  async getOrderDetailById(id) {
     const query = {
-      text: 'SELECT menus.id, menus.name, menus.price, categories.name as category, menus.created_at FROM menus LEFT JOIN categories ON menus.category_id = categories.id WHERE menus.id = $1',
+      text: 'SELECT orders.id, orders.total_price, orders.total_payment, orders.created_by FROM orders WHERE id = $1',
       values: [id],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new NotFoundError('Menu tidak ditemukan');
+      throw new NotFoundError('Order tidak ditemukan');
+    }
+
+    return rows[0];
+  }
+
+  async getOrderMenuByOrderId(id) {
+    const query = {
+      text: 'SELECT om.id, om.menu_id, m.name, SUM(om.quantity) as total_quantity, SUM(om.quantity * m.price) as total_price FROM order_menu AS om INNER JOIN menus AS m ON om.menu_id = m.id INNER JOIN orders AS o ON om.order_id = o.id WHERE o.id = $1 GROUP BY om.id, om.menu_id, m.name; ',
+      values: [id],
+    };
+
+    const { rows, rowCount } = await this._pool.query(query);
+
+    if (!rowCount) {
+      throw new NotFoundError('Order tidak ditemukan');
     }
 
     return rows;
   }
 
-  async addOrder({ name, price, category_id }) {
+  async addOrder({
+    menu, total_price, total_payment, created_by,
+  }) {
+    const orderId = `order-${Date.now()}`;
     const query = {
-      text: 'INSERT INTO menus (name, price, category_id) VALUES($1, $2, $3) RETURNING id',
-      values: [name, price, category_id],
+      text: 'INSERT INTO orders (total_price, total_payment, created_by, id) VALUES ($1, $2, $3, $4) RETURNING id',
+      values: [total_price, total_payment, created_by, orderId],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new InvarianError('Menu gagal ditambahkan');
+      throw new InvarianError('Order gagal ditambahkan');
     }
 
-    return rows[0].id;
-  }
+    const { id } = rows[0];
 
-  async putOrderById(id, { name, price, category_id }) {
-    const query = {
-      text: 'UPDATE menus SET name = $1, price = $2, category_id = $3 WHERE id = $4 RETURNING id',
-      values: [name, price, category_id, id],
-    };
+    menu.forEach(async (element) => {
+      const insert = {
+        text: 'INSERT INTO order_menu (order_id, menu_id, quantity) VALUES ($1, $2, $3)',
+        values: [id, element.menu_id, element.quantity],
+      };
+      const response = await this._pool.query(insert);
 
-    const { rows, rowCount } = await this._pool.query(query);
+      if (!response.rowCount) {
+        throw new InvarianError('Order gagal ditambahkan');
+      }
+    });
 
-    if (!rowCount) {
-      throw new NotFoundError(
-        'Menu gagal diperbarui. Id tidak ditemukan',
-      );
-    }
-
-    return rows[0].id;
+    return id;
   }
 
   async deleteOrderById(id) {
     const query = {
-      text: 'DELETE FROM menus WHERE id = $1 RETURNING id',
+      text: 'DELETE FROM orders WHERE id = $1 RETURNING id',
       values: [id],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new NotFoundError('Menu gagal dihapus. Id tidak ditemukan');
+      throw new NotFoundError('Order gagal dihapus. Id tidak ditemukan');
     }
 
     return rows[0].id;

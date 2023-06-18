@@ -10,42 +10,18 @@ exports.up = (pgm) => {
       notNull: true,
       unique: true,
     },
-    customer_id: {
-      type: 'integer',
-      notNull: true,
-      references: '"customers"',
-      onDelete: 'cascade',
-    },
-    total: { type: 'integer', notNull: true },
-    quantity: { type: 'integer', notNull: true },
-    menu_id: {
-      type: 'integer',
-      notNull: true,
-      references: '"menus"',
-      onDelete: 'cascade',
-    },
-    order_at: {
+    total_price: { type: 'integer', notNull: true },
+    total_payment: { type: 'integer', notNull: true },
+    order_date: {
       type: 'timestamp',
       notNull: true,
       default: pgm.func('current_timestamp'),
     },
-    updated_at: {
-      type: 'timestamp',
+    created_by: {
+      type: 'varchar(50)',
       notNull: true,
-      default: pgm.func('current_timestamp'),
     },
   });
-
-  pgm.addConstraint(
-    'orders',
-    'fk_orders.customer_id_customers.id',
-    'FOREIGN KEY(customer_id) REFERENCES customers(id) ON DELETE CASCADE',
-  );
-  pgm.addConstraint(
-    'orders',
-    'fk_orders.menu_id_menus.id',
-    'FOREIGN KEY(menu_id) REFERENCES menus(id) ON DELETE CASCADE',
-  );
 };
 
 exports.down = (pgm) => {

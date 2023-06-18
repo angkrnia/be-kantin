@@ -10,7 +10,7 @@ class UsersService {
 
   async getUsers() {
     const query = {
-      text: 'SELECT users.id, users.username, users.fullname FROM users',
+      text: 'SELECT cashiers.id, cashiers.username, cashiers.fullname FROM cashiers',
     };
 
     const { rows, rowCount } = await this._pool.query(query);
@@ -26,7 +26,7 @@ class UsersService {
     const id = `user-${nanoid(16)}`;
     const createdAt = new Date().toISOString();
     const query = {
-      text: 'INSERT INTO users VALUES($1, $2, $3, $4, $5) RETURNING id',
+      text: 'INSERT INTO cashiers VALUES($1, $2, $3, $4, $5) RETURNING id',
       values: [id, username, password, fullname, createdAt],
     };
 

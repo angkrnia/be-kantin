@@ -3,7 +3,7 @@
 exports.shorthands = undefined;
 
 exports.up = (pgm) => {
-  pgm.createTable('users', {
+  pgm.createTable('cashiers', {
     id: {
       type: 'varchar(50)',
       primaryKey: true,
@@ -20,6 +20,11 @@ exports.up = (pgm) => {
     password: {
       type: 'varchar(255)',
       notNull: true,
+    },
+    is_admin: {
+      type: 'boolean',
+      notNull: true,
+      default: false,
     },
     created_at: {
       type: 'timestamp',

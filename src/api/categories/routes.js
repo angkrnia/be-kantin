@@ -9,11 +9,11 @@ const routes = (handler) => [
     path: '/categories',
     handler: (request, h) => handler.postCategoryHandler(request, h),
   },
-//   {
-//     method: "DELETE",
-//     path: "/categories/{id}",
-//     handler: (request, h) => handler.deleteCategoryByIdHandler(request, h),
-//   },
+  {
+    method: "DELETE",
+    path: "/categories/{id}",
+    handler: (request, h) => handler.deleteCategoryByIdHandler(request, h),
+  },
 ];
 
 module.exports = routes;

@@ -5,11 +5,8 @@ exports.shorthands = undefined;
 exports.up = (pgm) => {
   pgm.createTable('menus', {
     id: {
-      type: 'integer',
+      type: 'serial',
       primaryKey: true,
-      notNull: true,
-      unique: true,
-      autoIncrement: true,
     },
     name: { type: 'varchar(50)', notNull: true },
     price: { type: 'integer', notNull: true },

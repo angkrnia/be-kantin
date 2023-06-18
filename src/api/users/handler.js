@@ -51,6 +51,26 @@ class UsersHandler {
       return response;
     }
   };
+
+  async deleteUserByIdHandler(request, h) {
+    try {
+      const { id } = request.params;
+
+      await this._service.deleteUserById(id);
+
+      return {
+        status: 'success',
+        message: 'User berhasil dihapus',
+      };
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(500);
+      return response;
+    }
+  }
 }
 
 module.exports = UsersHandler;

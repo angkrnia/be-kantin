@@ -23,17 +23,30 @@ class UsersService {
   }
 
   async addUser({ username, password, fullname }) {
-    const id = `user-${nanoid(16)}`;
-    const createdAt = new Date().toISOString();
     const query = {
-      text: 'INSERT INTO cashiers VALUES($1, $2, $3, $4, $5) RETURNING id',
-      values: [id, username, password, fullname, createdAt],
+      text: 'INSERT INTO cashiers (username, password, fullname) VALUES($1, $2, $3) RETURNING id',
+      values: [username, password, fullname],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
       throw new InvarianError('User gagal ditambahkan');
+    }
+
+    return rows[0].id;
+  }
+
+  async deleteUserById(id) {
+    const query = {
+      text: 'DELETE FROM cashiers WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const { rows, rowCount } = await this._pool.query(query);
+
+    if (!rowCount) {
+      throw new NotFoundError('User gagal dihapus. Id tidak ditemukan');
     }
 
     return rows[0].id;

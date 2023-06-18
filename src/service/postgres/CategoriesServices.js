@@ -1,5 +1,4 @@
 const { Pool } = require('pg');
-const { nanoid } = require('nanoid');
 const InvarianError = require('../../error/InvarianError');
 const NotFoundError = require('../../error/NotFoundError');
 
@@ -19,18 +18,30 @@ class CategoriesServices {
   }
 
   async addCategory({ name }) {
-    const id = `category-${nanoid(16)}`;
-    const createdAt = new Date().toISOString();
-
     const query = {
-      text: 'INSERT INTO categories VALUES($1, $2, $3) RETURNING id',
-      values: [id, name, createdAt],
+      text: 'INSERT INTO categories (name) VALUES($1) RETURNING id',
+      values: [name],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
 
     if (!rowCount) {
-      throw new InvarianError('Room gagal ditambahkan');
+      throw new InvarianError('Category gagal ditambahkan');
+    }
+
+    return rows[0].id;
+  }
+
+  async deleteCategoryById(id) {
+    const query = {
+      text: 'DELETE FROM categories WHERE id = $1 RETURNING id',
+      values: [id],
+    };
+
+    const { rows, rowCount } = await this._pool.query(query);
+
+    if (!rowCount) {
+      throw new NotFoundError('Category gagal dihapus. Id tidak ditemukan');
     }
 
     return rows[0].id;

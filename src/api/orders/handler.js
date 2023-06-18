@@ -1,16 +1,16 @@
-class CategoriesHandler {
+class OrdersHandler {
   constructor(service) {
     this._service = service;
   }
 
-  getCategoriesHandler = async (request, h) => {
+  getOrders = async (request, h) => {
     try {
-      const categories = await this._service.getCategories();
+      const orders = await this._service.getOrders();
 
       return {
         status: 'success',
         data: {
-          categories,
+          orders,
         },
       };
     } catch (error) {
@@ -23,17 +23,40 @@ class CategoriesHandler {
     }
   };
 
-  postCategoryHandler = async (request, h) => {
+  getOrderById = async (request, h) => {
     try {
-      const { name } = request.payload;
+      const { id } = request.params;
+      const order = await this._service.getOrderById(id);
 
-      const categoryId = await this._service.addCategory({ name });
+      return {
+        status: 'success',
+        data: {
+          order,
+        },
+      };
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(404);
+      return response;
+    }
+  };
+
+  postOrders = async (request, h) => {
+    try {
+      const { menu } = request.payload;
+
+      const orderId = await this._service.addOrder({
+        menu,
+      });
 
       const response = h.response({
         status: 'success',
-        message: 'Category berhasil ditambahkan',
+        message: 'Order baru berhasil ditambahkan',
         data: {
-          categoryId,
+          orderId,
         },
       });
       response.code(201);
@@ -47,26 +70,6 @@ class CategoriesHandler {
       return response;
     }
   };
-
-  async deleteCategoryByIdHandler(request, h) {
-    try {
-      const { id } = request.params;
-
-      await this._service.deleteCategoryById(id);
-
-      return {
-        status: 'success',
-        message: 'Category berhasil dihapus',
-      };
-    } catch (error) {
-      const response = h.response({
-        status: 'fail',
-        message: error.message,
-      });
-      response.code(500);
-      return response;
-    }
-  }
 }
 
-module.exports = CategoriesHandler;
+module.exports = OrdersHandler;

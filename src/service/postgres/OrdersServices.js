@@ -23,7 +23,7 @@ class OrdersServices {
 
   async getOrderDetailById(id) {
     const query = {
-      text: 'SELECT orders.id, orders.total_price, orders.total_payment, orders.created_by FROM orders WHERE id = $1',
+      text: 'SELECT orders.id, orders.total_price, orders.total_payment, orders.created_by AS cashier FROM orders WHERE id = $1',
       values: [id],
     };
 

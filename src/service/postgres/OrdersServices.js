@@ -38,7 +38,7 @@ class OrdersServices {
 
   async getOrderMenuByOrderId(id) {
     const query = {
-      text: 'SELECT om.menu_id, m.name, m.price, CAST(SUM(om.quantity) AS INTEGER) as total_quantity, CAST(SUM(om.quantity * m.price) AS INTEGER) as total_price, c.name as category FROM order_menu AS om INNER JOIN menus AS m ON om.menu_id = m.id INNER JOIN orders AS o ON om.order_id = o.id INNER JOIN categories AS c ON c.id = m.category_id WHERE o.id = $1 GROUP BY om.id, om.menu_id, m.name, c.name;',
+      text: 'SELECT om.menu_id, m.name, m.price, CAST(SUM(om.quantity) AS INTEGER) as total_quantity, CAST(SUM(om.quantity * m.price) AS INTEGER) as total_price, c.name as category FROM order_menu AS om INNER JOIN menus AS m ON om.menu_id = m.id INNER JOIN orders AS o ON om.order_id = o.id INNER JOIN categories AS c ON c.id = m.category_id WHERE o.id = $1 GROUP BY om.id, om.menu_id, m.name, m.price, c.name;',
       values: [id],
     };
 

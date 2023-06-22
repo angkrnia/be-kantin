@@ -73,6 +73,7 @@ class OrdersServices {
         text: 'INSERT INTO order_menu (order_id, menu_id, quantity) VALUES ($1, $2, $3)',
         values: [id, element.menu_id, element.quantity],
       };
+
       const response = await this._pool.query(insert);
 
       if (!response.rowCount) {

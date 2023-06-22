@@ -9,7 +9,7 @@ class CategoriesServices {
 
   async getMenu() {
     const query = {
-      text: 'SELECT menus.id, menus.name, menus.price, categories.name as category, categories.id as category_id, menus.created_at FROM menus LEFT JOIN categories ON menus.category_id = categories.id',
+      text: 'SELECT menus.id, menus.name, menus.price, categories.name as category, menus.created_at FROM menus LEFT JOIN categories ON menus.category_id = categories.id',
     };
 
     const { rows, rowCount } = await this._pool.query(query);

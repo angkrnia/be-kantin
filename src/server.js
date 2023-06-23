@@ -32,6 +32,12 @@ const authValidator = require('./validator/auth');
     },
   });
 
+  server.route({
+    method: 'GET',
+    path: '/',
+    handler: () => 'Hello World',
+  });
+
   await server.register([
     {
       plugin: users,

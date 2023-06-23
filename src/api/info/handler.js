@@ -53,7 +53,7 @@ class InfoHandler {
       return {
         status: 'success',
         data: {
-          saldo_range: parseInt(saldo_range, 10),
+          from, to, saldo: parseInt(saldo_range, 10),
         },
       };
     } catch (error) {

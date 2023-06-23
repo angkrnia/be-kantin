@@ -35,7 +35,15 @@ const authValidator = require('./validator/auth');
   server.route({
     method: 'GET',
     path: '/',
-    handler: () => 'Hello World',
+    handler: () => ({
+      status: 'success',
+      meta: {
+        message: 'Hello, this is API for Cashier App',
+        author: 'Angga Kurnia',
+        github: 'https://github.com/angkrnia',
+        instagram: 'https://instagram.com/angkrnia',
+      },
+    }),
   });
 
   await server.register([

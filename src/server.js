@@ -7,12 +7,14 @@ const users = require('./api/users');
 const categories = require('./api/categories');
 const menu = require('./api/menu');
 const orders = require('./api/orders');
+const info = require('./api/info');
 
 // services
 const UsersService = require('./service/postgres/UsersService');
 const CategoriesServices = require('./service/postgres/CategoriesServices');
 const MenuServices = require('./service/postgres/MenuServices');
 const OrdersServices = require('./service/postgres/OrdersServices');
+const InfoServices = require('./service/postgres/InfoServices');
 
 // validator
 const authValidator = require('./validator/auth');
@@ -51,6 +53,12 @@ const authValidator = require('./validator/auth');
       plugin: orders,
       options: {
         service: new OrdersServices(),
+      },
+    },
+    {
+      plugin: info,
+      options: {
+        service: new InfoServices(),
       },
     },
   ]);

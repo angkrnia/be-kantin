@@ -8,6 +8,7 @@ const categories = require('./api/categories');
 const menu = require('./api/menu');
 const orders = require('./api/orders');
 const info = require('./api/info');
+const laporan = require('./api/laporan');
 
 // services
 const UsersService = require('./service/postgres/UsersService');
@@ -15,6 +16,7 @@ const CategoriesServices = require('./service/postgres/CategoriesServices');
 const MenuServices = require('./service/postgres/MenuServices');
 const OrdersServices = require('./service/postgres/OrdersServices');
 const InfoServices = require('./service/postgres/InfoServices');
+const LaporanServices = require('./service/postgres/LaporanServices');
 
 // validator
 const authValidator = require('./validator/auth');
@@ -59,6 +61,12 @@ const authValidator = require('./validator/auth');
       plugin: info,
       options: {
         service: new InfoServices(),
+      },
+    },
+    {
+      plugin: laporan,
+      options: {
+        service: new LaporanServices(),
       },
     },
   ]);

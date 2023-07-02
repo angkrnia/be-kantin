@@ -1,7 +1,6 @@
 const { Pool } = require("pg");
-const { nanoid } = require("nanoid");
+const bcrypt = require('bcrypt');
 const InvarianError = require("../../error/InvarianError");
-const NotFoundError = require("../../error/NotFoundError");
 
 class AuthService {
   constructor() {
@@ -10,27 +9,29 @@ class AuthService {
 
   async verifyUserCredential(username, password) {
     const query = {
-      text: "SELECT id, password FROM users WHERE username = $1",
+      text: 'SELECT id, fullname, password FROM cashiers WHERE username = $1',
       values: [username],
     };
 
     const result = await this._pool.query(query);
 
     if (!result.rowCount) {
-      throw new InvarianError("Kredensial yang Anda berikan salah");
+      throw new InvarianError('Kredensial yang Anda berikan salah');
     }
 
     const { id, password: hashedPassword } = result.rows[0];
 
-    if (hashedPassword !== password) {
-      throw new InvarianError("Kredensial yang Anda berikan salah");
+    const match = await bcrypt.compare(password, hashedPassword);
+
+    if (!match) {
+      throw new InvarianError('Kredensial yang Anda berikan salah');
     }
 
-    this.generateAccessToken(id);
-  }
-
-  generateAccessToken(userId) {
-    return nanoid(16);
+    return {
+      id: result.rows[0].id,
+      fullname: result.rows[0].fullname,
+      is_admin: result.rows[0].is_admin,
+    };
   }
 }
 

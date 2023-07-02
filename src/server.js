@@ -3,6 +3,7 @@ require('dotenv').config();
 const Hapi = require('@hapi/hapi');
 
 // api
+const auth = require('./api/auth');
 const users = require('./api/users');
 const categories = require('./api/categories');
 const menu = require('./api/menu');
@@ -11,6 +12,7 @@ const info = require('./api/info');
 const laporan = require('./api/laporan');
 
 // services
+const AuthServices = require('./service/postgres/AuthServices');
 const UsersService = require('./service/postgres/UsersService');
 const CategoriesServices = require('./service/postgres/CategoriesServices');
 const MenuServices = require('./service/postgres/MenuServices');
@@ -47,6 +49,12 @@ const authValidator = require('./validator/auth');
   });
 
   await server.register([
+    {
+      plugin: auth,
+      options: {
+        service: new AuthServices(),
+      },
+    },
     {
       plugin: users,
       options: {

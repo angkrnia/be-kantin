@@ -1,5 +1,6 @@
 const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
+const bcrypt = require('bcrypt');
 const InvarianError = require('../../error/InvarianError');
 const NotFoundError = require('../../error/NotFoundError');
 
@@ -23,9 +24,12 @@ class UsersService {
   }
 
   async addUser({ username, password, fullname }) {
+    await this.verifyNewUser(username);
+
+    const hashedPassword = await bcrypt.hash(password, 10);
     const query = {
       text: 'INSERT INTO cashiers (username, password, fullname) VALUES($1, $2, $3) RETURNING id',
-      values: [username, password, fullname],
+      values: [username, hashedPassword, fullname],
     };
 
     const { rows, rowCount } = await this._pool.query(query);
@@ -50,6 +54,21 @@ class UsersService {
     }
 
     return rows[0].id;
+  }
+
+  async verifyNewUser(username) {
+    const query = {
+      text: 'SELECT username FROM cashiers WHERE username = $1',
+      values: [username],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (result.rowCount > 0) {
+      throw new InvarianError(
+        'Gagal menambahkan User baru, Username sudah ada',
+      );
+    }
   }
 }
 

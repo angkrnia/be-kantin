@@ -5,11 +5,12 @@ class LaporanHandler {
 
   getAllLaporan = async (request, h) => {
     try {
-      const laporan = await this._service.getAllLaporan();
+      const { data1, data2 } = await this._service.getAllLaporan();
       return h.response({
         status: 'success',
         data: {
-          laporan,
+          total_pendapatan: data2,
+          laporan: data1,
         },
       }).code(200);
     } catch (error) {
@@ -27,13 +28,16 @@ class LaporanHandler {
       const { from, to } = request.query;
       const fromDate = new Date(from).toISOString();
       const toDate = new Date(to).toISOString();
-      const laporan = await this._service.getLaporanByRangeDate(fromDate, toDate);
-      return h.response({
-        status: 'success',
-        data: {
-          laporan,
-        },
-      }).code(200);
+      const { data1, data2 } = await this._service.getLaporanByRangeDate(fromDate, toDate);
+      return h
+        .response({
+          status: 'success',
+          data: {
+            total_pendapatan: data2,
+            laporan: data1,
+          },
+        })
+        .code(200);
     } catch (error) {
       const response = h.response({
         status: 'fail',

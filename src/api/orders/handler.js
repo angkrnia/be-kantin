@@ -48,10 +48,9 @@ class OrdersHandler {
 
   postOrders = async (request, h) => {
     try {
-      const { menu, total_price, total_payment } = request.payload;
-      const created_by = request?.auth?.credentials?.id
-        ? request.auth.credentials.id
-        : 'Administrator';
+      const {
+        menu, total_price, total_payment, created_by,
+      } = request.payload;
 
       const orderId = await this._service.addOrder({
         menu,
